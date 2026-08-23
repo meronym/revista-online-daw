@@ -1,0 +1,54 @@
+services:
+  caddy:
+    image: caddy:2-alpine
+    ports:
+      - "8080:80"
+    environment:
+      SITE_ADDRESS: ${SITE_ADDRESS}
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      # Caddy serveste direct fisierele statice, deci ii ajunge doar public/
+      - ./public:/var/www/html/public:ro
+      - ./data/caddy:/data
+    depends_on:
+      - php
+
+  php:
+    build: ./docker
+    # Fara port expus: doar Caddy vorbeste cu PHP-FPM, in reteaua interna
+    volumes:
+      # Codul e montat, nu copiat: editarea locala se vede imediat in container
+      - .:/var/www/html
+    env_file: .env
+    depends_on:
+      db:
+        condition: service_healthy
+
+  db:
+    image: mysql:8.4
+    ports:
+      # Expus pe host ca sa se poata folosi un client GUI fara tunel SSH
+      - "3306:3306"
+    environment:
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${DB_PASS}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASS}
+    volumes:
+      - ./data/mysql:/var/lib/mysql
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -u root -p\"$$MYSQL_ROOT_PASSWORD\" --silent"]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+
+  phpmyadmin:
+    image: phpmyadmin:5
+    ports:
+      - "8081:80"
+    environment:
+      PMA_HOST: db
+      UPLOAD_LIMIT: 64M
+    depends_on:
+      db:
+        condition: service_healthy

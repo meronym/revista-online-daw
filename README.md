@@ -14,6 +14,25 @@ CSV, conținut preluat din surse externe și statistici de trafic.
 - Caddy ca server web, cu TLS automat în producție
 - FPDF și PHPMailer incluse direct în proiect, fără Composer
 
+## Mediu de dezvoltare
+
+```
+make setup   # creeaza .env din .env.example
+make up      # porneste stack-ul (Caddy + PHP-FPM + MySQL + phpMyAdmin)
+make down    # opreste stack-ul
+make logs    # urmareste log-urile
+make sh      # shell in containerul PHP
+make mysql   # client MySQL
+```
+
+| Serviciu | Adresă |
+|---|---|
+| Aplicație | http://localhost:8080 |
+| phpMyAdmin | http://localhost:8081 |
+| MySQL | localhost:3306 |
+
+Completează parolele în `.env` înainte de primul `make up`.
+
 ## Stadiu
 
 Schelet în lucru.

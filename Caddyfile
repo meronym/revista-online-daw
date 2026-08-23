@@ -1,0 +1,11 @@
+{$SITE_ADDRESS} {
+	root * /var/www/html/public
+
+	encode gzip zstd
+
+	# php_fastcgi face si rewrite-ul catre index.php, deci URL-urile
+	# prietenoase functioneaza fara configurare suplimentara
+	php_fastcgi php:9000
+
+	file_server
+}
