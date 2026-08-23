@@ -1,0 +1,20 @@
+# Secrets and environment
+.env
+*.local.php
+
+# Runtime content — not source
+/public/uploads/*
+!/public/uploads/.gitkeep
+
+# Local data volumes
+/data/
+
+# Logs
+*.log
+/logs/
+
+# OS / editor
+.DS_Store
+.vscode/
+.idea/
+*.swp
