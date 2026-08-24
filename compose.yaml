@@ -30,6 +30,9 @@ services:
       # Expus pe host ca sa se poata folosi un client GUI fara tunel SSH
       - "3306:3306"
     environment:
+      # Fara locale, clientul mysql din imagine porneste pe latin1 si
+      # strica encoding-ul diacriticelor la incarcarea datelor
+      LANG: C.UTF-8
       MYSQL_DATABASE: ${DB_NAME}
       MYSQL_USER: ${DB_USER}
       MYSQL_PASSWORD: ${DB_PASS}

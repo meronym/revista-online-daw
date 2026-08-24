@@ -23,6 +23,8 @@ make down    # opreste stack-ul
 make logs    # urmareste log-urile
 make sh      # shell in containerul PHP
 make mysql   # client MySQL
+
+make db-schema   # reincarca structura bazei de date
 ```
 
 | Serviciu | Adresă |
