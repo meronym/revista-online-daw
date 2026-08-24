@@ -8,7 +8,7 @@ COMPOSE := docker compose
 MYSQL_FLAGS := --default-character-set=utf8mb4
 
 .DEFAULT_GOAL := help
-.PHONY: help setup up down restart logs sh mysql db-schema
+.PHONY: help setup up down restart logs sh mysql db db-schema db-seed
 
 help: ## Afiseaza comenzile disponibile
 	@grep -E '^[a-z-]+:.*?## ' $(MAKEFILE_LIST) \
@@ -37,3 +37,8 @@ mysql: ## Deschide clientul MySQL pe baza de date
 
 db-schema: ## Reincarca structura bazei de date
 	$(COMPOSE) exec -T -e MYSQL_PWD=$(DB_PASS) db mysql $(MYSQL_FLAGS) -u$(DB_USER) $(DB_NAME) < db/schema.sql
+
+db-seed: ## Reincarca datele de test
+	$(COMPOSE) exec -T -e MYSQL_PWD=$(DB_PASS) db mysql $(MYSQL_FLAGS) -u$(DB_USER) $(DB_NAME) < db/seed.sql
+
+db: db-schema db-seed ## Reface baza de date de la zero

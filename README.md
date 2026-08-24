@@ -24,7 +24,9 @@ make logs    # urmareste log-urile
 make sh      # shell in containerul PHP
 make mysql   # client MySQL
 
-make db-schema   # reincarca structura bazei de date
+make db          # reface baza de date de la zero (structura + date de test)
+make db-schema   # doar structura
+make db-seed     # doar datele de test
 ```
 
 | Serviciu | Adresă |
@@ -34,6 +36,16 @@ make db-schema   # reincarca structura bazei de date
 | MySQL | localhost:3306 |
 
 Completează parolele în `.env` înainte de primul `make up`.
+
+### Conturi din datele de test
+
+Toate au parola `parola123`.
+
+| Utilizator | Rol |
+|---|---|
+| admin | administrator |
+| ioana, radu | autor |
+| cititor | cititor |
 
 ## Stadiu
 
