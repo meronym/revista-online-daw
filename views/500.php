@@ -15,6 +15,18 @@
             Pagina nu a putut fi afișată. Încearcă din nou peste câteva momente.
         </p>
         <a class="btn btn-primary" href="/">Înapoi la pagina principală</a>
+
+        <?php if (isset($e) && filter_var(ini_get('display_errors'), FILTER_VALIDATE_BOOL)): ?>
+            <!-- Detaliile depind de display_errors, care in productie e oprit -->
+            <div class="alert alert-danger mt-4">
+                <p class="fw-semibold mb-1"><?= e($e::class) ?></p>
+                <p class="mb-2"><?= e($e->getMessage()) ?></p>
+                <p class="small text-body-secondary mb-2">
+                    <?= e($e->getFile()) ?>:<?= (int) $e->getLine() ?>
+                </p>
+                <pre class="small mb-0 overflow-auto"><?= e($e->getTraceAsString()) ?></pre>
+            </div>
+        <?php endif; ?>
     </main>
 </body>
 </html>

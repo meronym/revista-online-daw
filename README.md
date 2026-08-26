@@ -37,6 +37,9 @@ make db-seed     # doar datele de test
 
 Completează parolele în `.env` înainte de primul `make up`.
 
+`APP_ENV=local` afișează erorile în pagină, cu tot cu stack trace. Orice altă
+valoare le lasă doar în log — asta se folosește pe server.
+
 ### Conturi din datele de test
 
 Toate au parola `parola123`.

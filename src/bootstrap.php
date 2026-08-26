@@ -5,6 +5,12 @@ require __DIR__ . '/db.php';
 require __DIR__ . '/helpers.php';
 require __DIR__ . '/articles.php';
 
+// Afisarea erorilor e oprita in php.ini, ca sa nu afisam informatii sensibile in pagina
+// in mediul local de dezvoltare o activam explicit
+if (getenv('APP_ENV') === 'local') {
+    ini_set('display_errors', '1');
+}
+
 // Pagina trece printr-un buffer pentru ca handler-ul de mai jos sa o poata curata la nevoie
 // altfel dupa primul byte trimis continutul nu se mai poate schimba
 ob_start();
