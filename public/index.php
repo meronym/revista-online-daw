@@ -1,22 +1,22 @@
 <?php
-// Verificare temporara a stack-ului: PHP porneste si ajunge la MySQL
+declare(strict_types=1);
 
-$dsn = sprintf(
-    'mysql:host=%s;port=%s;dbname=%s;charset=utf8mb4',
-    getenv('DB_HOST'), getenv('DB_PORT'), getenv('DB_NAME')
+require __DIR__ . '/../src/db.php';
+require __DIR__ . '/../src/helpers.php';
+
+$rubrici = findAll('rubrici', 'nume');
+
+// Join-urile raman SQL scris de mana; helperele generice acopera un singur tabel
+$articole = fetchAll(
+    "SELECT a.slug, a.titlu, a.rezumat, a.publicat_la,
+            r.slug AS slug_rubrica, r.nume AS rubrica,
+            u.nume_utilizator AS autor
+       FROM articole a
+       JOIN rubrici r     ON r.id = a.id_rubrica
+       JOIN utilizatori u ON u.id = a.id_utilizator
+      WHERE a.stare = 'publicat'
+      ORDER BY a.publicat_la DESC"
 );
-
-try {
-    $pdo = new PDO($dsn, getenv('DB_USER'), getenv('DB_PASS'), [
-        PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
-        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-    ]);
-    $stare = 'MySQL ' . $pdo->query('SELECT VERSION()')->fetchColumn();
-} catch (PDOException $e) {
-    // Mesajul include numele bazei si al utilizatorului: il trimitem in log pentru a preveni un leak
-    error_log('Conexiune esuata: ' . $e->getMessage());
-    $stare = 'conexiune esuata';
-}
 ?>
 <!doctype html>
 <html lang="ro">
@@ -26,7 +26,29 @@ try {
     <title>Revistă Online</title>
 </head>
 <body>
-    <h1>Revistă Online</h1>
-    <p>PHP <?= PHP_VERSION ?> &mdash; <?= htmlspecialchars($stare, ENT_QUOTES, 'UTF-8') ?></p>
+    <header>
+        <h1>Revistă Online</h1>
+        <nav>
+            <?php foreach ($rubrici as $rubrica): ?>
+                <a href="/rubrica/<?= e($rubrica['slug']) ?>"><?= e($rubrica['nume']) ?></a>
+            <?php endforeach; ?>
+        </nav>
+    </header>
+
+    <main>
+        <?php foreach ($articole as $articol): ?>
+            <article>
+                <h2>
+                    <a href="/articol/<?= e($articol['slug']) ?>"><?= e($articol['titlu']) ?></a>
+                </h2>
+                <p>
+                    <a href="/rubrica/<?= e($articol['slug_rubrica']) ?>"><?= e($articol['rubrica']) ?></a>
+                    &middot; <?= e($articol['autor']) ?>
+                    &middot; <?= e(formatDate($articol['publicat_la'])) ?>
+                </p>
+                <p><?= e($articol['rezumat']) ?></p>
+            </article>
+        <?php endforeach; ?>
+    </main>
 </body>
 </html>
