@@ -11,8 +11,8 @@ MYSQL_FLAGS := --default-character-set=utf8mb4
 .PHONY: help setup up down restart logs sh mysql db db-schema db-seed
 
 help: ## Afiseaza comenzile disponibile
-	@grep -E '^[a-z-]+:.*?## ' $(MAKEFILE_LIST) \
-		| awk -F':.*?## ' '{printf "  \033[36m%-10s\033[0m %s\n", $$1, $$2}'
+	@grep -E '^[a-z-]+:.*## ' $(firstword $(MAKEFILE_LIST)) \
+		| awk -F':.*## ' '{printf "  \033[36m%-10s\033[0m %s\n", $$1, $$2}'
 
 setup: ## Creeaza .env din .env.example daca nu exista
 	@test -f .env || (cp .env.example .env && echo "Am creat .env - completeaza parolele inainte de 'make up'")
