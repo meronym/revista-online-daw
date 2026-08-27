@@ -23,6 +23,31 @@ function formatDate(?string $datetime): string
 }
 
 
+function notFound(): never
+{
+    http_response_code(404);
+    render('404', ['title' => 'Pagina nu a fost găsită']);
+    exit;
+}
+
+function redirect(string $path): never
+{
+    header('Location: ' . $path);
+    exit;
+}
+
+function slugify(string $text): string
+{
+    $fara_diacritice = strtr($text, [
+        'ă' => 'a', 'â' => 'a', 'î' => 'i', 'ș' => 's', 'ț' => 't',
+        'Ă' => 'a', 'Â' => 'a', 'Î' => 'i', 'Ș' => 's', 'Ț' => 't',
+        // Variantele cu sedila, folosite des in text copiat din alte surse
+        'ş' => 's', 'ţ' => 't', 'Ş' => 's', 'Ţ' => 't',
+    ]);
+
+    return trim(preg_replace('/[^a-z0-9]+/', '-', mb_strtolower($fara_diacritice)), '-');
+}
+
 // Textul articolelor e stocat ca text simplu; escapam intai, apoi adaugam markup
 function paragraphs(?string $text): string
 {

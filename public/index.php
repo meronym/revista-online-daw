@@ -10,12 +10,6 @@ $segments = array_values(array_filter(explode('/', $path), fn (string $s) => $s 
 $route = $segments[0] ?? '';
 $param = $segments[1] ?? null;
 
-// Ruta inexistenta si resursa negasita ajung in aceeasi pagina
-$notFound = static function (): void {
-    http_response_code(404);
-    render('404', ['title' => 'Pagina nu a fost găsită']);
-};
-
 switch ($route) {
     case '':
         render('acasa', [
@@ -28,8 +22,7 @@ switch ($route) {
         $section = $param === null ? null : sectionBySlug($param);
 
         if ($section === null) {
-            $notFound();
-            break;
+            notFound();
         }
 
         render('rubrica', [
@@ -43,8 +36,7 @@ switch ($route) {
         $article = $param === null ? null : publishedArticleBySlug($param);
 
         if ($article === null) {
-            $notFound();
-            break;
+            notFound();
         }
 
         render('articol', [
@@ -53,6 +45,29 @@ switch ($route) {
         ]);
         break;
 
+    case 'admin':
+        if (($segments[1] ?? '') !== 'articole') {
+            notFound();
+        }
+
+        $action = $segments[2] ?? '';
+        $post = $_SERVER['REQUEST_METHOD'] === 'POST';
+
+        if ($action === '') {
+            adminList();
+        } elseif ($action === 'nou') {
+            $post ? adminSave(null) : adminForm(null);
+        } elseif (!ctype_digit($action)) {
+            notFound();
+        } elseif (($segments[3] ?? '') === '') {
+            $post ? adminSave((int) $action) : adminForm((int) $action);
+        } elseif ($segments[3] === 'stergere' && $post) {
+            adminDelete((int) $action);
+        } else {
+            notFound();
+        }
+        break;
+
     default:
-        $notFound();
+        notFound();
 }

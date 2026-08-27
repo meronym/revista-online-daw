@@ -45,3 +45,40 @@ function publishedArticleBySlug(string $slug): ?array
         [$slug]
     );
 }
+
+
+// Lista din administrare arata si ciornele, deci nu filtreaza dupa stare
+function allArticles(): array
+{
+    return fetchAll(
+        "SELECT a.id, a.titlu, a.stare, a.creat_la, a.publicat_la,
+                r.nume AS rubrica, u.nume_utilizator AS autor" . ARTICLE_JOINS . "
+          ORDER BY a.creat_la DESC"
+    );
+}
+
+// Validarea completa se face pe server: campurile din formular pot fi oricum
+function validateArticle(array $input): array
+{
+    $errors = [];
+
+    if ($input['titlu'] === '') {
+        $errors['titlu'] = 'Titlul este obligatoriu.';
+    } elseif (mb_strlen($input['titlu']) > 255) {
+        $errors['titlu'] = 'Titlul poate avea cel mult 255 de caractere.';
+    }
+
+    if ($input['continut'] === '') {
+        $errors['continut'] = 'Conținutul este obligatoriu.';
+    }
+
+    if (find('rubrici', $input['id_rubrica']) === null) {
+        $errors['id_rubrica'] = 'Alege o rubrică.';
+    }
+
+    if (!in_array($input['stare'], ['ciorna', 'publicat'], true)) {
+        $errors['stare'] = 'Starea trebuie să fie ciornă sau publicat.';
+    }
+
+    return $errors;
+}
