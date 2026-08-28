@@ -5,20 +5,26 @@ function adminList(): void
 {
     render('admin/articole', [
         'title'    => 'Administrare articole',
-        'articles' => allArticles(),
+        'articles' => allArticles(isAdmin() ? null : (int) currentUser()['id']),
     ]);
 }
 
 function adminForm(?int $id, ?array $values = null, array $errors = []): void
 {
-    $article = $id === null ? null : find('articole', $id) ?? notFound();
+    $article = null;
+
+    if ($id !== null) {
+        $article = find('articole', $id) ?? notFound();
+        requireOwnerOrAdmin($article);
+    }
 
     render('admin/articol', [
-        'title'    => $id === null ? 'Articol nou' : 'Editare articol',
-        'id'       => $id,
-        'values'   => $values ?? $article ?? ['titlu' => '', 'rezumat' => '', 'continut' => '', 'id_rubrica' => 0, 'stare' => 'ciorna'],
-        'errors'   => $errors,
-        'sections' => allSections(),
+        'title'      => $id === null ? 'Articol nou' : 'Editare articol',
+        'canPublish' => isAdmin(),
+        'id'         => $id,
+        'values'     => $values ?? $article ?? ['titlu' => '', 'rezumat' => '', 'continut' => '', 'id_rubrica' => 0, 'stare' => 'ciorna'],
+        'errors'     => $errors,
+        'sections'   => allSections(),
     ]);
 }
 
@@ -32,6 +38,17 @@ function adminSave(?int $id): never
         'id_rubrica' => (int) ($_POST['id_rubrica'] ?? 0),
         'stare'      => $_POST['stare'] ?? 'ciorna',
     ];
+
+    $article = $id === null ? null : find('articole', $id) ?? notFound();
+
+    if ($article !== null) {
+        requireOwnerOrAdmin($article);
+    }
+
+    // Autorul scrie, administratorul publica
+    if (!isAdmin()) {
+        $input['stare'] = $article['stare'] ?? 'ciorna';
+    }
 
     $errors = validateArticle($input);
     $slug = slugify($input['titlu']);
@@ -49,13 +66,10 @@ function adminSave(?int $id): never
     $data = $input + ['slug' => $slug];
 
     if ($id === null) {
-        // Pana la autentificare, articolele noi apartin contului de administrator
-        $data['id_utilizator'] = 1;
+        $data['id_utilizator'] = (int) currentUser()['id'];
         $data['publicat_la'] = $input['stare'] === 'publicat' ? date('Y-m-d H:i:s') : null;
         insert('articole', $data);
     } else {
-        $article = find('articole', $id) ?? notFound();
-
         // Data publicarii se scrie o singura data la prima publicare
         if ($input['stare'] === 'publicat' && $article['publicat_la'] === null) {
             $data['publicat_la'] = date('Y-m-d H:i:s');
@@ -69,6 +83,8 @@ function adminSave(?int $id): never
 
 function adminDelete(int $id): never
 {
+    requireOwnerOrAdmin(find('articole', $id) ?? notFound());
+
     delete('articole', $id);
 
     redirect('/admin/articole');

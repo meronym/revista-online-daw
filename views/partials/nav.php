@@ -24,7 +24,7 @@
                 <?php if ($user === null): ?>
                     <li class="nav-item"><a class="nav-link" href="/autentificare">Autentificare</a></li>
                 <?php else: ?>
-                    <?php if ($user['rol'] === 'admin'): ?>
+                    <?php if ($user['rol'] !== 'cititor'): ?>
                         <li class="nav-item"><a class="nav-link" href="/admin/articole">Administrare</a></li>
                     <?php endif; ?>
                     <li class="nav-item">

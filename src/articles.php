@@ -47,14 +47,20 @@ function publishedArticleBySlug(string $slug): ?array
 }
 
 
-// Lista din administrare arata si ciornele, deci nu filtreaza dupa stare
-function allArticles(): array
+// Lista din administrare arata si ciornele. Cu $userId primit, arata doar
+// articolele acelui autor
+function allArticles(?int $userId = null): array
 {
-    return fetchAll(
-        "SELECT a.id, a.titlu, a.stare, a.creat_la, a.publicat_la,
-                r.nume AS rubrica, u.nume_utilizator AS autor" . ARTICLE_JOINS . "
-          ORDER BY a.creat_la DESC"
-    );
+    $sql = "SELECT a.id, a.titlu, a.stare, a.creat_la, a.publicat_la,
+                   r.nume AS rubrica, u.nume_utilizator AS autor" . ARTICLE_JOINS;
+    $params = [];
+
+    if ($userId !== null) {
+        $sql .= ' WHERE a.id_utilizator = ?';
+        $params[] = $userId;
+    }
+
+    return fetchAll($sql . ' ORDER BY a.creat_la DESC', $params);
 }
 
 // Validarea completa se face pe server: campurile din formular pot fi oricum

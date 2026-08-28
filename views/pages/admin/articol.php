@@ -33,10 +33,16 @@
 
         <div class="col-md-4 mb-3">
             <label class="form-label" for="stare">Stare</label>
-            <select class="form-select" id="stare" name="stare">
-                <option value="ciorna" <?= $values['stare'] === 'ciorna' ? 'selected' : '' ?>>Ciornă</option>
-                <option value="publicat" <?= $values['stare'] === 'publicat' ? 'selected' : '' ?>>Publicat</option>
-            </select>
+            <?php if ($canPublish): ?>
+                <select class="form-select" id="stare" name="stare">
+                    <option value="ciorna" <?= $values['stare'] === 'ciorna' ? 'selected' : '' ?>>Ciornă</option>
+                    <option value="publicat" <?= $values['stare'] === 'publicat' ? 'selected' : '' ?>>Publicat</option>
+                </select>
+                <div class="form-text">Publicarea îl face vizibil pe site.</div>
+            <?php else: ?>
+                <input class="form-control" id="stare" value="<?= $values['stare'] === 'publicat' ? 'Publicat' : 'Ciornă' ?>" disabled>
+                <div class="form-text">Publicarea o face administratorul.</div>
+            <?php endif; ?>
         </div>
     </div>
 

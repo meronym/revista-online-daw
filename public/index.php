@@ -66,7 +66,7 @@ switch ($route) {
         redirect('/');
 
     case 'admin':
-        requireRole('admin');
+        requireRole('admin', 'autor');
 
         if (($segments[1] ?? '') !== 'articole') {
             notFound();
