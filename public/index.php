@@ -9,6 +9,7 @@ $segments = array_values(array_filter(explode('/', $path), fn (string $s) => $s 
 
 $route = $segments[0] ?? '';
 $param = $segments[1] ?? null;
+$post = $_SERVER['REQUEST_METHOD'] === 'POST';
 
 switch ($route) {
     case '':
@@ -45,13 +46,33 @@ switch ($route) {
         ]);
         break;
 
+    case 'autentificare':
+        if ($post && login($_POST['email'] ?? '', $_POST['parola'] ?? '')) {
+            redirect(currentUser()['rol'] === 'admin' ? '/admin/articole' : '/');
+        }
+
+        render('autentificare', [
+            'title' => 'Autentificare',
+            'email' => $_POST['email'] ?? '',
+            'error' => $post ? 'Email sau parolă greșite.' : null,
+        ]);
+        break;
+
+    case 'deconectare':
+        if ($post) {
+            logout();
+        }
+
+        redirect('/');
+
     case 'admin':
+        requireRole('admin');
+
         if (($segments[1] ?? '') !== 'articole') {
             notFound();
         }
 
         $action = $segments[2] ?? '';
-        $post = $_SERVER['REQUEST_METHOD'] === 'POST';
 
         if ($action === '') {
             adminList();

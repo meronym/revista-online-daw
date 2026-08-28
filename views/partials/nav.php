@@ -18,6 +18,24 @@
                     </li>
                 <?php endforeach; ?>
             </ul>
+
+            <?php $user = currentUser(); ?>
+            <ul class="navbar-nav ms-auto">
+                <?php if ($user === null): ?>
+                    <li class="nav-item"><a class="nav-link" href="/autentificare">Autentificare</a></li>
+                <?php else: ?>
+                    <?php if ($user['rol'] === 'admin'): ?>
+                        <li class="nav-item"><a class="nav-link" href="/admin/articole">Administrare</a></li>
+                    <?php endif; ?>
+                    <li class="nav-item">
+                        <form method="post" action="/deconectare">
+                            <button class="btn btn-link nav-link" type="submit">
+                                Ieși (<?= e($user['nume_utilizator']) ?>)
+                            </button>
+                        </form>
+                    </li>
+                <?php endif; ?>
+            </ul>
         </div>
     </div>
 </nav>

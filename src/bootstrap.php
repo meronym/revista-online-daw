@@ -4,7 +4,10 @@ declare(strict_types=1);
 require __DIR__ . '/db.php';
 require __DIR__ . '/helpers.php';
 require __DIR__ . '/articles.php';
+require __DIR__ . '/auth.php';
 require __DIR__ . '/admin.php';
+
+session_start();
 
 // Afisarea erorilor e oprita in php.ini, ca sa nu afisam informatii sensibile in pagina
 // in mediul local de dezvoltare o activam explicit
