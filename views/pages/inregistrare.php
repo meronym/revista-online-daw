@@ -13,6 +13,7 @@
         <?php endif; ?>
 
         <form class="bg-body p-4 rounded shadow-sm" method="post" action="/inregistrare">
+            <input type="hidden" name="csrf" value="<?= e(csrfToken()) ?>">
             <div class="mb-3">
                 <label class="form-label" for="nume_utilizator">Nume de utilizator</label>
                 <input class="form-control" id="nume_utilizator" name="nume_utilizator"

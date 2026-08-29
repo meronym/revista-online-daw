@@ -18,6 +18,7 @@
 
         <?php if (currentUser() !== null): ?>
             <form method="post" action="/articol/<?= e($article['slug']) ?>/favorit">
+                <input type="hidden" name="csrf" value="<?= e(csrfToken()) ?>">
                 <button class="btn btn-sm <?= $isFavourite ? 'btn-primary' : 'btn-outline-primary' ?>" type="submit">
                     <?= $isFavourite ? 'Salvat la favorite' : 'Adaugă la favorite' ?>
                 </button>

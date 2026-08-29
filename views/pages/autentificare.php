@@ -7,6 +7,7 @@
         <?php endif; ?>
 
         <form class="bg-body p-4 rounded shadow-sm" method="post" action="/autentificare">
+            <input type="hidden" name="csrf" value="<?= e(csrfToken()) ?>">
             <div class="mb-3">
                 <label class="form-label" for="email">Email</label>
                 <input class="form-control" type="email" id="email" name="email" value="<?= e($email) ?>">

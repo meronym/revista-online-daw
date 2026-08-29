@@ -1,6 +1,24 @@
 <?php
 declare(strict_types=1);
 
+// Un singur token per sesiune, integrat in fiecare formular si verificat la POST in index.php
+function csrfToken(): string
+{
+    return $_SESSION['csrf'] ??= bin2hex(random_bytes(32));
+}
+
+function requireCsrf(): void
+{
+    if (!hash_equals(csrfToken(), $_POST['csrf'] ?? '')) {
+        http_response_code(403);
+        render('403', [
+            'title'   => 'Cerere respinsă',
+            'message' => 'Formularul a expirat sau nu a fost trimis de pe acest site. Reîncarcă pagina și încearcă din nou.',
+        ]);
+        exit;
+    }
+}
+
 function currentUser(): ?array
 {
     static $user = null;
@@ -49,7 +67,10 @@ function requireRole(string ...$roles): void
 
     if (!in_array($user['rol'], $roles, true)) {
         http_response_code(403);
-        render('403', ['title' => 'Acces interzis']);
+        render('403', [
+            'title'   => 'Acces interzis',
+            'message' => 'Contul tău nu are drepturi pentru această pagină.',
+        ]);
         exit;
     }
 }
@@ -61,7 +82,10 @@ function requireOwnerOrAdmin(array $article): void
 
     if ($user['rol'] !== 'admin' && (int) $article['id_utilizator'] !== (int) $user['id']) {
         http_response_code(403);
-        render('403', ['title' => 'Acces interzis']);
+        render('403', [
+            'title'   => 'Acces interzis',
+            'message' => 'Articolul aparține altui autor.',
+        ]);
         exit;
     }
 }

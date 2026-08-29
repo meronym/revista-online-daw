@@ -11,6 +11,11 @@ $route = $segments[0] ?? '';
 $param = $segments[1] ?? null;
 $post = $_SERVER['REQUEST_METHOD'] === 'POST';
 
+// O singura verificare acopera toate rutele care scriu
+if ($post) {
+    requireCsrf();
+}
+
 switch ($route) {
     case '':
         render('acasa', [

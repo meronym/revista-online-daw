@@ -14,6 +14,7 @@
         <form class="d-inline" method="post"
               action="/admin/articole/<?= (int) $item['id'] ?>/stergere"
               onsubmit="return confirm('Ștergi articolul definitiv?')">
+            <input type="hidden" name="csrf" value="<?= e(csrfToken()) ?>">
             <button class="btn btn-sm btn-outline-danger" type="submit">Șterge</button>
         </form>
     </td>

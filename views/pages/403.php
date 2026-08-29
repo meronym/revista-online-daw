@@ -1,5 +1,5 @@
-<h1 class="h3">Acces interzis</h1>
+<h1 class="h3"><?= e($title) ?></h1>
 
-<p class="text-body-secondary">Contul tău nu are drepturi pentru această pagină.</p>
+<p class="text-body-secondary"><?= e($message) ?></p>
 
 <a class="btn btn-primary" href="/">Înapoi la pagina principală</a>

@@ -31,6 +31,7 @@
                     <?php endif; ?>
                     <li class="nav-item">
                         <form method="post" action="/deconectare">
+                            <input type="hidden" name="csrf" value="<?= e(csrfToken()) ?>">
                             <button class="btn btn-link nav-link" type="submit">
                                 Ieși (<?= e($user['nume_utilizator']) ?>)
                             </button>
