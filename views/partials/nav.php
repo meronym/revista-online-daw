@@ -22,8 +22,10 @@
             <?php $user = currentUser(); ?>
             <ul class="navbar-nav ms-auto">
                 <?php if ($user === null): ?>
+                    <li class="nav-item"><a class="nav-link" href="/inregistrare">Cont nou</a></li>
                     <li class="nav-item"><a class="nav-link" href="/autentificare">Autentificare</a></li>
                 <?php else: ?>
+                    <li class="nav-item"><a class="nav-link" href="/favorite">Favorite</a></li>
                     <?php if ($user['rol'] !== 'cititor'): ?>
                         <li class="nav-item"><a class="nav-link" href="/admin/articole">Administrare</a></li>
                     <?php endif; ?>

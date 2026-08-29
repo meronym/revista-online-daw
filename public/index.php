@@ -40,9 +40,21 @@ switch ($route) {
             notFound();
         }
 
+        if (($segments[2] ?? '') === 'favorit') {
+            if (!$post) {
+                notFound();
+            }
+
+            toggleFavourite((int) requireLogin()['id'], (int) $article['id']);
+            redirect('/articol/' . $article['slug']);
+        }
+
+        $user = currentUser();
+
         render('articol', [
-            'title'   => $article['titlu'] . ' — Revistă Online',
-            'article' => $article,
+            'title'      => $article['titlu'] . ' — Revistă Online',
+            'article'    => $article,
+            'isFavourite' => $user !== null && favouriteId((int) $user['id'], (int) $article['id']) !== null,
         ]);
         break;
 
@@ -55,6 +67,34 @@ switch ($route) {
             'title' => 'Autentificare',
             'email' => $_POST['email'] ?? '',
             'error' => $post ? 'Email sau parolă greșite.' : null,
+        ]);
+        break;
+
+    case 'inregistrare':
+        $input = [
+            'nume_utilizator' => trim($_POST['nume_utilizator'] ?? ''),
+            'email'           => trim($_POST['email'] ?? ''),
+            'parola'          => $_POST['parola'] ?? '',
+            'confirmare'      => $_POST['confirmare'] ?? '',
+        ];
+        $errors = $post ? validateRegistration($input) : [];
+
+        if ($post && $errors === []) {
+            registerReader($input);
+            redirect('/');
+        }
+
+        render('inregistrare', [
+            'title'  => 'Cont nou',
+            'values' => $input,
+            'errors' => $errors,
+        ]);
+        break;
+
+    case 'favorite':
+        render('favorite', [
+            'title'    => 'Articolele mele favorite',
+            'articles' => favouriteArticles((int) requireLogin()['id']),
         ]);
         break;
 

@@ -33,6 +33,11 @@ function logout(): void
     session_destroy();
 }
 
+function requireLogin(): array
+{
+    return currentUser() ?? redirect('/autentificare');
+}
+
 // Verificare la inceputul actiunilor protejate
 function requireRole(string ...$roles): void
 {
@@ -64,4 +69,43 @@ function requireOwnerOrAdmin(array $article): void
 function isAdmin(): bool
 {
     return currentUser()['rol'] === 'admin';
+}
+
+function validateRegistration(array $input): array
+{
+    $errors = [];
+
+    if ($input['nume_utilizator'] === '') {
+        $errors['nume_utilizator'] = 'Numele de utilizator este obligatoriu.';
+    } elseif (fetchOne('SELECT id FROM utilizatori WHERE nume_utilizator = ?', [$input['nume_utilizator']])) {
+        $errors['nume_utilizator'] = 'Numele de utilizator este deja folosit.';
+    }
+
+    if (!filter_var($input['email'], FILTER_VALIDATE_EMAIL)) {
+        $errors['email'] = 'Adresa de email nu este validă.';
+    } elseif (fetchOne('SELECT id FROM utilizatori WHERE email = ?', [$input['email']])) {
+        $errors['email'] = 'Există deja un cont cu acest email.';
+    }
+
+    if (mb_strlen($input['parola']) < 8) {
+        $errors['parola'] = 'Parola trebuie să aibă cel puțin 8 caractere.';
+    } elseif ($input['parola'] !== $input['confirmare']) {
+        $errors['confirmare'] = 'Parolele nu coincid.';
+    }
+
+    return $errors;
+}
+
+function registerReader(array $input): void
+{
+    $id = insert('utilizatori', [
+        'nume_utilizator' => $input['nume_utilizator'],
+        'email'           => $input['email'],
+        'parola'          => password_hash($input['parola'], PASSWORD_DEFAULT),
+        // Rolul e fixat aici, nu vine din formular
+        'rol'             => 'cititor',
+    ]);
+
+    session_regenerate_id(true);
+    $_SESSION['id_utilizator'] = $id;
 }

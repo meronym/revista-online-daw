@@ -88,3 +88,38 @@ function validateArticle(array $input): array
 
     return $errors;
 }
+
+
+function favouriteId(int $userId, int $articleId): ?int
+{
+    $row = fetchOne(
+        'SELECT id FROM articole_favorite WHERE id_utilizator = ? AND id_articol = ?',
+        [$userId, $articleId]
+    );
+
+    return $row === null ? null : (int) $row['id'];
+}
+
+function toggleFavourite(int $userId, int $articleId): void
+{
+    $id = favouriteId($userId, $articleId);
+
+    if ($id === null) {
+        insert('articole_favorite', ['id_utilizator' => $userId, 'id_articol' => $articleId]);
+    } else {
+        delete('articole_favorite', $id);
+    }
+}
+
+function favouriteArticles(int $userId): array
+{
+    return fetchAll(
+        "SELECT a.slug, a.titlu, a.rezumat, a.publicat_la,
+                r.slug AS slug_rubrica, r.nume AS rubrica,
+                u.nume_utilizator AS autor" . ARTICLE_JOINS . "
+           JOIN articole_favorite f ON f.id_articol = a.id
+          WHERE f.id_utilizator = ? AND a.stare = 'publicat'
+          ORDER BY f.creat_la DESC",
+        [$userId]
+    );
+}

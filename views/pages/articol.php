@@ -11,9 +11,19 @@
 <article class="bg-body p-4 rounded shadow-sm">
     <h1 class="h2"><?= e($article['titlu']) ?></h1>
 
-    <p class="text-body-secondary">
-        <?= e($article['autor']) ?> &middot; <?= e(formatDate($article['publicat_la'])) ?>
-    </p>
+    <div class="d-flex justify-content-between align-items-center">
+        <p class="text-body-secondary mb-0">
+            <?= e($article['autor']) ?> &middot; <?= e(formatDate($article['publicat_la'])) ?>
+        </p>
+
+        <?php if (currentUser() !== null): ?>
+            <form method="post" action="/articol/<?= e($article['slug']) ?>/favorit">
+                <button class="btn btn-sm <?= $isFavourite ? 'btn-primary' : 'btn-outline-primary' ?>" type="submit">
+                    <?= $isFavourite ? 'Salvat la favorite' : 'Adaugă la favorite' ?>
+                </button>
+            </form>
+        <?php endif; ?>
+    </div>
 
     <?php if ($article['rezumat'] !== null): ?>
         <p class="lead"><?= e($article['rezumat']) ?></p>
