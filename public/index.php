@@ -18,6 +18,8 @@ if ($post) {
 
 switch ($route) {
     case '':
+        recordVisit($path);
+
         render('acasa', [
             'title'    => 'Revistă Online',
             'articles' => publishedArticles(),
@@ -30,6 +32,8 @@ switch ($route) {
         if ($section === null) {
             notFound();
         }
+
+        recordVisit($path);
 
         render('rubrica', [
             'title'    => $section['nume'] . ' — Revistă Online',
@@ -53,6 +57,8 @@ switch ($route) {
             toggleFavourite((int) requireLogin()['id'], (int) $article['id']);
             redirect('/articol/' . $article['slug']);
         }
+
+        recordVisit($path, (int) $article['id']);
 
         $user = currentUser();
 
@@ -112,6 +118,17 @@ switch ($route) {
 
     case 'admin':
         requireRole('admin', 'autor');
+
+        if (($segments[1] ?? '') === 'statistici') {
+            requireRole('admin');
+
+            render('admin/statistici', [
+                'title' => 'Statistici',
+                'stats' => visitStats(),
+                'top'   => topArticles(),
+            ]);
+            break;
+        }
 
         if (($segments[1] ?? '') !== 'articole') {
             notFound();

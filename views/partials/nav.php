@@ -27,7 +27,10 @@
                 <?php else: ?>
                     <li class="nav-item"><a class="nav-link" href="/favorite">Favorite</a></li>
                     <?php if ($user['rol'] !== 'cititor'): ?>
-                        <li class="nav-item"><a class="nav-link" href="/admin/articole">Administrare</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/admin/articole">Articole</a></li>
+                    <?php endif; ?>
+                    <?php if ($user['rol'] === 'admin'): ?>
+                        <li class="nav-item"><a class="nav-link" href="/admin/statistici">Statistici</a></li>
                     <?php endif; ?>
                     <li class="nav-item">
                         <form method="post" action="/deconectare">

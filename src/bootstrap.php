@@ -5,6 +5,7 @@ require __DIR__ . '/db.php';
 require __DIR__ . '/helpers.php';
 require __DIR__ . '/articles.php';
 require __DIR__ . '/auth.php';
+require __DIR__ . '/analytics.php';
 require __DIR__ . '/admin.php';
 
 session_start();

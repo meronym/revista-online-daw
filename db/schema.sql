@@ -46,7 +46,6 @@ CREATE TABLE articole (
     imagine       VARCHAR(255) DEFAULT NULL,
     url_video     VARCHAR(255) DEFAULT NULL,
     stare         ENUM('ciorna','publicat') NOT NULL DEFAULT 'ciorna',
-    vizualizari   INT NOT NULL DEFAULT 0,
     creat_la      DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     modificat_la  DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     publicat_la   DATETIME DEFAULT NULL,
