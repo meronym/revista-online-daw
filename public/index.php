@@ -49,6 +49,15 @@ switch ($route) {
             notFound();
         }
 
+        if (($segments[2] ?? '') === 'pdf') {
+            sendDownload(
+                articlePdf($article),
+                $article['slug'] . '.pdf',
+                'application/pdf',
+                'inline'
+            );
+        }
+
         if (($segments[2] ?? '') === 'favorit') {
             if (!$post) {
                 notFound();
@@ -135,6 +144,15 @@ switch ($route) {
         }
 
         $action = $segments[2] ?? '';
+
+        if ($action === 'csv') {
+            sendDownload(
+                articlesCsv(allArticles(isAdmin() ? null : (int) currentUser()['id'])),
+                'articole.csv',
+                'text/csv; charset=utf-8',
+                'attachment'
+            );
+        }
 
         if ($action === '') {
             adminList();

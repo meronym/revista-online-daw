@@ -16,14 +16,20 @@
             <?= e($article['autor']) ?> &middot; <?= e(formatDate($article['publicat_la'])) ?>
         </p>
 
-        <?php if (currentUser() !== null): ?>
+        <div class="d-flex gap-2">
+            <a class="btn btn-sm btn-outline-secondary" href="/articol/<?= e($article['slug']) ?>/pdf">
+                Versiune PDF
+            </a>
+
+            <?php if (currentUser() !== null): ?>
             <form method="post" action="/articol/<?= e($article['slug']) ?>/favorit">
                 <input type="hidden" name="csrf" value="<?= e(csrfToken()) ?>">
                 <button class="btn btn-sm <?= $isFavourite ? 'btn-primary' : 'btn-outline-primary' ?>" type="submit">
                     <?= $isFavourite ? 'Salvat la favorite' : 'Adaugă la favorite' ?>
                 </button>
             </form>
-        <?php endif; ?>
+            <?php endif; ?>
+        </div>
     </div>
 
     <?php if ($article['rezumat'] !== null): ?>
