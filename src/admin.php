@@ -22,7 +22,7 @@ function adminForm(?int $id, ?array $values = null, array $errors = []): void
         'title'      => $id === null ? 'Articol nou' : 'Editare articol',
         'canPublish' => isAdmin(),
         'id'         => $id,
-        'values'     => $values ?? $article ?? ['titlu' => '', 'rezumat' => '', 'continut' => '', 'id_rubrica' => 0, 'stare' => 'ciorna'],
+        'values'     => $values ?? $article ?? ['titlu' => '', 'rezumat' => '', 'continut' => '', 'url_video' => '', 'id_rubrica' => 0, 'stare' => 'ciorna'],
         'errors'     => $errors,
         'sections'   => allSections(),
     ]);
@@ -33,8 +33,10 @@ function adminSave(?int $id): never
     // Lista fixa de campuri: orice altceva din $_POST nu ajunge in baza de date
     $input = [
         'titlu'      => trim($_POST['titlu'] ?? ''),
-        'rezumat'    => trim($_POST['rezumat'] ?? ''),
+        // Campurile optionale lasate goale se salveaza ca NULL
+        'rezumat'    => trim($_POST['rezumat'] ?? '') ?: null,
         'continut'   => trim($_POST['continut'] ?? ''),
+        'url_video'  => trim($_POST['url_video'] ?? '') ?: null,
         'id_rubrica' => (int) ($_POST['id_rubrica'] ?? 0),
         'stare'      => $_POST['stare'] ?? 'ciorna',
     ];

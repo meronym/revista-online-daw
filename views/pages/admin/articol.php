@@ -54,6 +54,13 @@
                   maxlength="500"><?= e($values['rezumat']) ?></textarea>
     </div>
 
+    <div class="mb-3">
+        <label class="form-label" for="url_video">Material video</label>
+        <input class="form-control" id="url_video" name="url_video" maxlength="255"
+               value="<?= e($values['url_video']) ?>">
+        <div class="form-text">Opțional, link YouTube. Apare în pagina articolului.</div>
+    </div>
+
     <div class="mb-4">
         <label class="form-label" for="continut">Conținut</label>
         <textarea class="form-control" id="continut" name="continut" rows="12"><?= e($values['continut']) ?></textarea>

@@ -38,5 +38,12 @@
 
     <hr>
 
+    <?php if ($videoId = youtubeId($article['url_video'])): ?>
+        <div class="ratio ratio-16x9 mb-4">
+            <iframe src="https://www.youtube.com/embed/<?= e($videoId) ?>"
+                    title="Material video" allowfullscreen loading="lazy"></iframe>
+        </div>
+    <?php endif; ?>
+
     <?= paragraphs($article['continut']) ?>
 </article>

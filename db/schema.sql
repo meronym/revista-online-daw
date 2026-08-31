@@ -43,7 +43,6 @@ CREATE TABLE articole (
     titlu         VARCHAR(255) NOT NULL,
     rezumat       VARCHAR(500) DEFAULT NULL,
     continut      TEXT NOT NULL,
-    imagine       VARCHAR(255) DEFAULT NULL,
     url_video     VARCHAR(255) DEFAULT NULL,
     stare         ENUM('ciorna','publicat') NOT NULL DEFAULT 'ciorna',
     creat_la      DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,

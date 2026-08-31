@@ -63,6 +63,12 @@ function allArticles(?int $userId = null): array
     return fetchAll($sql . ' ORDER BY a.creat_la DESC', $params);
 }
 
+// Acceptam ambele forme de link YouTube: youtube.com/watch?v=... si youtu.be/...
+function youtubeId(?string $url): ?string
+{
+    return preg_match('~(?:youtube\.com/watch\?v=|youtu\.be/)([\w-]{11})~', (string) $url, $m) ? $m[1] : null;
+}
+
 // Validarea completa se face pe server: campurile din formular pot fi oricum
 function validateArticle(array $input): array
 {
@@ -84,6 +90,10 @@ function validateArticle(array $input): array
 
     if (!in_array($input['stare'], ['ciorna', 'publicat'], true)) {
         $errors['stare'] = 'Starea trebuie să fie ciornă sau publicat.';
+    }
+
+    if ($input['url_video'] !== null && youtubeId($input['url_video']) === null) {
+        $errors['url_video'] = 'Linkul video trebuie să fie de pe YouTube.';
     }
 
     return $errors;

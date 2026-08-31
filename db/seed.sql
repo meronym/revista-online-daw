@@ -29,14 +29,14 @@ INSERT INTO rubrici (id, slug, nume) VALUES
 
 
 -- Datele sunt relative la NOW(), ca revista sa arate populata oricand e reincarcata
-INSERT INTO articole (id, id_utilizator, id_rubrica, slug, titlu, rezumat, continut, stare, creat_la, publicat_la) VALUES
+INSERT INTO articole (id, id_utilizator, id_rubrica, slug, titlu, rezumat, continut, url_video, stare, creat_la, publicat_la) VALUES
 (1, 2, 3, 'cum-schimba-inteligenta-artificiala-redactiile-mici',
  'Cum schimbă inteligența artificială redacțiile mici',
  'Instrumentele automate au ajuns și în redacțiile cu trei oameni. Ce se câștigă și ce se pierde.',
  'Într-o redacție de cartier, o zi de lucru înseamnă adesea un singur om care scrie, corectează și publică. Instrumentele automate de transcriere și de corectură au scurtat vizibil drumul de la interviu la text publicat.
 
 Partea mai puțin discutată este verificarea. Un rezumat generat automat sună convingător chiar și atunci când greșește, iar redacțiile mici nu au un al doilea om care să citească înainte de publicare. Soluția pe care au găsit-o câteva publicații locale este simplă: automatizează tot ce ține de formă, dar nimic din ce ține de fapte.',
- 'publicat', DATE_SUB(NOW(), INTERVAL 9 DAY), DATE_SUB(NOW(), INTERVAL 8 DAY)),
+ NULL, 'publicat', DATE_SUB(NOW(), INTERVAL 9 DAY), DATE_SUB(NOW(), INTERVAL 8 DAY)),
 
 (2, 3, 2, 'un-festival-de-film-care-umple-salile-din-cluj',
  'Un festival de film care umple sălile din Cluj',
@@ -44,6 +44,7 @@ Partea mai puțin discutată este verificarea. Un rezumat generat automat sună 
  'Programul de anul acesta a mizat pe debuturi, iar pariul a ieșit: proiecțiile de seară s-au vândut integral în primele două zile. Organizatorii spun că publicul tânăr a fost majoritar, ceea ce nu se întâmpla acum cinci ani.
 
 Dincolo de competiție, secțiunea de documentar a atras atenția prin trei filme despre orașe în schimbare. Toate trei au fost filmate pe parcursul a mai mult de doi ani, iar diferența de ritm față de restul programului s-a simțit imediat în sală.',
+ 'https://www.youtube.com/watch?v=YE7VzlLtp-4',
  'publicat', DATE_SUB(NOW(), INTERVAL 7 DAY), DATE_SUB(NOW(), INTERVAL 6 DAY)),
 
 (3, 2, 5, 'trei-zile-pe-transalpina-in-afara-sezonului',
@@ -52,7 +53,7 @@ Dincolo de competiție, secțiunea de documentar a atras atenția prin trei film
  'Am plecat într-o joi dimineață, cu ideea că vom prinde ultimele zile bune. Pe primii kilometri am întâlnit trei mașini. La 2.000 de metri era ceață deasă și șapte grade, iar peste o oră, soare.
 
 Cazările din afara sezonului costă aproape jumătate, dar multe se închid la începutul lui octombrie. Merită sunat înainte, pentru că informațiile de pe internet rămân neactualizate până în primăvară.',
- 'publicat', DATE_SUB(NOW(), INTERVAL 6 DAY), DATE_SUB(NOW(), INTERVAL 5 DAY)),
+ NULL, 'publicat', DATE_SUB(NOW(), INTERVAL 6 DAY), DATE_SUB(NOW(), INTERVAL 5 DAY)),
 
 (4, 3, 1, 'bucurestiul-isi-numara-din-nou-copacii',
  'Bucureștiul își numără din nou copacii',
@@ -60,7 +61,7 @@ Cazările din afara sezonului costă aproape jumătate, dar multe se închid la 
  'Primele sectoare inventariate au arătat că numărul real de arbori de aliniament este cu aproape un sfert mai mic decât cifra folosită în rapoartele anterioare. Explicația ține mai puțin de tăieri și mai mult de faptul că vechile evidențe nu fuseseră niciodată verificate pe teren.
 
 Inventarul se face cu GPS și fotografie pentru fiecare exemplar, iar datele ajung într-un registru public. Termenul anunțat pentru finalizare este anul viitor.',
- 'publicat', DATE_SUB(NOW(), INTERVAL 4 DAY), DATE_SUB(NOW(), INTERVAL 4 DAY)),
+ NULL, 'publicat', DATE_SUB(NOW(), INTERVAL 4 DAY), DATE_SUB(NOW(), INTERVAL 4 DAY)),
 
 (5, 3, 4, 'handbalul-feminin-intre-doua-generatii',
  'Handbalul feminin, între două generații',
@@ -68,7 +69,7 @@ Inventarul se face cu GPS și fotografie pentru fiecare exemplar, iar datele aju
  'Retragerile anunțate la finalul sezonului trecut lasă un gol pe care selecționerul îl recunoaște deschis. Media de vârstă a lotului scade cu patru ani, iar meciurile de pregătire din toamnă sunt, practic, singurul test înainte de calificări.
 
 Vestea bună vine din campionatul intern, unde trei cluburi au început să dea constant minute jucătoarelor sub 21 de ani. Este exact ce lipsea acum un deceniu, când generația care tocmai a plecat a intrat în lot fără rodaj.',
- 'publicat', DATE_SUB(NOW(), INTERVAL 3 DAY), DATE_SUB(NOW(), INTERVAL 3 DAY)),
+ NULL, 'publicat', DATE_SUB(NOW(), INTERVAL 3 DAY), DATE_SUB(NOW(), INTERVAL 3 DAY)),
 
 (6, 2, 3, 'bateriile-care-se-incarca-in-cinci-minute',
  'Bateriile care se încarcă în cinci minute',
@@ -76,7 +77,7 @@ Vestea bună vine din campionatul intern, unde trei cluburi au început să dea 
  'Celulele demonstrate în laborator ating deja pragul de cinci minute pentru optzeci la sută din capacitate. Problema nu mai este chimia, ci puterea pe care o stație trebuie să o livreze într-un interval atât de scurt.
 
 Pentru un parc de zece stații, vârful de consum depășește ce poate susține rețeaua din multe orașe fără investiții separate. De aceea operatorii testează acum stații cu baterie proprie, care se încarcă lent și livrează rapid.',
- 'publicat', DATE_SUB(NOW(), INTERVAL 2 DAY), DATE_SUB(NOW(), INTERVAL 2 DAY)),
+ NULL, 'publicat', DATE_SUB(NOW(), INTERVAL 2 DAY), DATE_SUB(NOW(), INTERVAL 2 DAY)),
 
 (7, 1, 2, 'biblioteci-de-cartier-redeschise-dupa-zece-ani',
  'Biblioteci de cartier, redeschise după zece ani',
@@ -84,19 +85,19 @@ Pentru un parc de zece stații, vârful de consum depășește ce poate susține
  'Redeschiderea a venit după o consultare publică în care cererea cea mai frecventă nu a fost pentru cărți, ci pentru spațiu de lucru cu internet. Filialele au fost reamenajate în consecință: mai puține rafturi la parter, mai multe mese.
 
 În prima lună, numărul de fișe noi de împrumut a depășit total anului trecut pentru toate filialele la un loc. Programul se închide acum la ora 20, iar sâmbăta sălile sunt pline de dimineață.',
- 'publicat', DATE_SUB(NOW(), INTERVAL 1 DAY), DATE_SUB(NOW(), INTERVAL 1 DAY)),
+ NULL, 'publicat', DATE_SUB(NOW(), INTERVAL 1 DAY), DATE_SUB(NOW(), INTERVAL 1 DAY)),
 
 (8, 2, 1, 'ce-se-intampla-cu-piata-chiriilor',
  'Ce se întâmplă cu piața chiriilor',
  'Primele date de toamnă arată o creștere mai mică decât în anii trecuți.',
  'Materialul este în lucru: mai avem de verificat cifrele din două orașe universitare și de obținut o reacție de la asociațiile de proprietari.',
- 'ciorna', DATE_SUB(NOW(), INTERVAL 2 DAY), NULL),
+ NULL, 'ciorna', DATE_SUB(NOW(), INTERVAL 2 DAY), NULL),
 
 (9, 3, 5, 'delta-in-afara-traseelor-turistice',
  'Delta, în afara traseelor turistice',
  'Cinci zile cu barca, plecând din Sfântu Gheorghe.',
  'Ciorna: notițele de teren sunt gata, fotografiile urmează să fie selectate.',
- 'ciorna', DATE_SUB(NOW(), INTERVAL 1 DAY), NULL);
+ NULL, 'ciorna', DATE_SUB(NOW(), INTERVAL 1 DAY), NULL);
 
 
 INSERT INTO articole_favorite (id_utilizator, id_articol) VALUES
