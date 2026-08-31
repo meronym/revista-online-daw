@@ -23,6 +23,17 @@ function formatDate(?string $datetime): string
 }
 
 
+function currentPath(): string
+{
+    return parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?: '/';
+}
+
+// Adresa absoluta, ceruta de canonical si de Open Graph
+function siteUrl(string $path = '/'): string
+{
+    return rtrim(getenv('APP_URL') ?: '', '/') . $path;
+}
+
 function notFound(): never
 {
     http_response_code(404);

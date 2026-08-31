@@ -4,7 +4,7 @@ declare(strict_types=1);
 require __DIR__ . '/../src/bootstrap.php';
 
 // Caddy trimite aici tot ce nu e fisier real, deci ruta se citeste din cale
-$path = rawurldecode(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH) ?: '/');
+$path = rawurldecode(currentPath());
 $segments = array_values(array_filter(explode('/', $path), fn (string $s) => $s !== ''));
 
 $route = $segments[0] ?? '';
@@ -36,9 +36,10 @@ switch ($route) {
         recordVisit($path);
 
         render('rubrica', [
-            'title'    => $section['nume'] . ' — Revistă Online',
-            'section'  => $section,
-            'articles' => publishedArticles((int) $section['id']),
+            'title'       => $section['nume'] . ' — Revistă Online',
+            'description' => 'Articole publicate în rubrica ' . $section['nume'] . '.',
+            'section'     => $section,
+            'articles'    => publishedArticles((int) $section['id']),
         ]);
         break;
 
@@ -72,11 +73,18 @@ switch ($route) {
         $user = currentUser();
 
         render('articol', [
-            'title'      => $article['titlu'] . ' — Revistă Online',
-            'article'    => $article,
+            'title'       => $article['titlu'] . ' — Revistă Online',
+            'description' => $article['rezumat'] ?? mb_substr($article['continut'], 0, 155),
+            'ogType'      => 'article',
+            'article'     => $article,
             'isFavourite' => $user !== null && favouriteId((int) $user['id'], (int) $article['id']) !== null,
         ]);
         break;
+
+    case 'robots.txt':
+        header('Content-Type: text/plain; charset=utf-8');
+        echo "User-agent: *\nDisallow: /admin/\n";
+        exit;
 
     case 'autentificare':
         if ($post && login($_POST['email'] ?? '', $_POST['parola'] ?? '')) {
