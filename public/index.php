@@ -19,10 +19,12 @@ if ($post) {
 switch ($route) {
     case '':
         recordVisit($path);
+        importNews();
 
         render('acasa', [
             'title'    => 'Revistă Online',
             'articles' => publishedArticles(),
+            'news'     => latestNews(),
         ]);
         break;
 

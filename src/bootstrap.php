@@ -7,6 +7,7 @@ require __DIR__ . '/articles.php';
 require __DIR__ . '/auth.php';
 require __DIR__ . '/analytics.php';
 require __DIR__ . '/contact.php';
+require __DIR__ . '/news.php';
 require __DIR__ . '/reports.php';
 require __DIR__ . '/admin.php';
 
