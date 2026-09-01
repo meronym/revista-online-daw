@@ -3,7 +3,7 @@
         <h1 class="h3 mb-4">Contact</h1>
 
         <?php if ($sent): ?>
-            <div class="alert alert-success">Mesajul a fost trimis. Îți răspundem cât putem de repede.</div>
+            <div class="alert alert-success">Mesajul a fost trimis. Ți-am trimis o confirmare pe email.</div>
         <?php endif; ?>
 
         <?php if ($errors !== []): ?>

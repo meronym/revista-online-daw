@@ -102,6 +102,7 @@ switch ($route) {
 
         if ($post && $errors === []) {
             insert('mesaje', $input);
+            sendContactEmails($input);
             // Redirect dupa POST: reincarcarea paginii nu retrimite mesajul
             redirect('/contact?trimis=1');
         }

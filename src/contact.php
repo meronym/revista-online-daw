@@ -1,6 +1,12 @@
 <?php
 declare(strict_types=1);
 
+require __DIR__ . '/../vendor/phpmailer/Exception.php';
+require __DIR__ . '/../vendor/phpmailer/PHPMailer.php';
+require __DIR__ . '/../vendor/phpmailer/SMTP.php';
+
+use PHPMailer\PHPMailer\PHPMailer;
+
 // Formularele publice pot fi trimise si de un script, nu doar din browser
 // deci verificam raspunsul reCAPTCHA aici pe server
 function recaptchaOk(): bool
@@ -43,4 +49,58 @@ function validateMessage(array $input): array
     }
 
     return $errors;
+}
+
+
+// Toate mesajele pleaca prin acelasi cont SMTP
+function mailer(): PHPMailer
+{
+    $mail = new PHPMailer();
+    $mail->isSMTP();
+    $mail->Host = (string) getenv('SMTP_HOST');
+    $mail->Port = (int) getenv('SMTP_PORT');
+    $mail->SMTPAuth = true;
+    $mail->Username = (string) getenv('SMTP_USER');
+    $mail->Password = (string) getenv('SMTP_PASS');
+    $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+    $mail->CharSet = 'UTF-8';
+    $mail->setFrom((string) getenv('SMTP_FROM'), 'Revistă Online');
+
+    return $mail;
+}
+
+// Mesajul e deja in DB cand ajungem aici, deci o eroare de SMTP nu il pierde
+// scriem eroarea in log si lasam formularul sa confirme trimiterea
+function sendMail(PHPMailer $mail): void
+{
+    if (!$mail->send()) {
+        error_log('Email netrimis: ' . $mail->ErrorInfo);
+    }
+}
+
+// Doua mesaje: unul catre redactie, altul de confirmare catre expeditor
+function sendContactEmails(array $input): void
+{
+    $notice = mailer();
+    $notice->addAddress((string) getenv('CONTACT_EMAIL'));
+    // Raspunsul pleaca direct catre cel care a completat formularul
+    $notice->addReplyTo($input['email'], $input['nume']);
+    $notice->Subject = 'Mesaj nou din formularul de contact';
+    $notice->Body = "Nume: {$input['nume']}\n"
+        . "Email: {$input['email']}\n"
+        . 'Telefon: ' . ($input['telefon'] ?? '-') . "\n\n"
+        . $input['continut'];
+
+    sendMail($notice);
+
+    // Confirmarea nu reia textul primit: formularul e public, iar mesajul ar
+    // pleca astfel, nefiltrat, catre orice adresa completata acolo
+    $confirmation = mailer();
+    $confirmation->addAddress($input['email'], $input['nume']);
+    $confirmation->Subject = 'Am primit mesajul tău';
+    $confirmation->Body = "Bună, {$input['nume']},\n\n"
+        . "Am primit mesajul trimis prin formularul de contact și îți răspundem cât putem de repede.\n\n"
+        . 'Revistă Online';
+
+    sendMail($confirmation);
 }
