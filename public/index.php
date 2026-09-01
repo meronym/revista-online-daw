@@ -86,6 +86,37 @@ switch ($route) {
         echo "User-agent: *\nDisallow: /admin/\n";
         exit;
 
+    case 'contact':
+        $input = [
+            'nume'     => trim($_POST['nume'] ?? ''),
+            'email'    => trim($_POST['email'] ?? ''),
+            'telefon'  => trim($_POST['telefon'] ?? '') ?: null,
+            'continut' => trim($_POST['continut'] ?? ''),
+        ];
+        $errors = $post ? validateMessage($input) : [];
+
+        // Formularul e public: pe langa CSRF, trece si prin reCAPTCHA
+        if ($post && !recaptchaOk()) {
+            $errors['recaptcha'] = 'Confirmă că nu ești robot.';
+        }
+
+        if ($post && $errors === []) {
+            insert('mesaje', $input);
+            // Redirect dupa POST: reincarcarea paginii nu retrimite mesajul
+            redirect('/contact?trimis=1');
+        }
+
+        recordVisit($path);
+
+        render('contact', [
+            'title'       => 'Contact',
+            'description' => 'Trimite un mesaj redacției Revistei Online.',
+            'values'      => $input,
+            'errors'      => $errors,
+            'sent'        => isset($_GET['trimis']),
+        ]);
+        break;
+
     case 'autentificare':
         if ($post && login($_POST['email'] ?? '', $_POST['parola'] ?? '')) {
             redirect(currentUser()['rol'] === 'admin' ? '/admin/articole' : '/');
@@ -106,6 +137,11 @@ switch ($route) {
             'confirmare'      => $_POST['confirmare'] ?? '',
         ];
         $errors = $post ? validateRegistration($input) : [];
+
+        // Formularul e public: pe langa CSRF, trece si prin reCAPTCHA
+        if ($post && !recaptchaOk()) {
+            $errors['recaptcha'] = 'Confirmă că nu ești robot.';
+        }
 
         if ($post && $errors === []) {
             registerReader($input);

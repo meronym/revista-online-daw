@@ -37,8 +37,12 @@
                 <input class="form-control" type="password" id="confirmare" name="confirmare">
             </div>
 
+            <div class="g-recaptcha mb-3" data-sitekey="<?= e(recaptchaSiteKey()) ?>"></div>
+
             <button class="btn btn-primary w-100" type="submit">Creează contul</button>
         </form>
+
+        <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 
         <p class="text-body-secondary small mt-3 mb-0">
             Ai deja cont? <a href="/autentificare">Autentifică-te</a>.

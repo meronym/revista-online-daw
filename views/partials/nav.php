@@ -17,6 +17,7 @@
                         </a>
                     </li>
                 <?php endforeach; ?>
+                <li class="nav-item"><a class="nav-link" href="/contact">Contact</a></li>
             </ul>
 
             <?php $user = currentUser(); ?>
