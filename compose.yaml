@@ -1,8 +1,10 @@
 services:
   caddy:
     image: caddy:2-alpine
+    restart: unless-stopped
     ports:
-      - "8080:80"
+      - "${HTTP_PORT}:80"
+      - "${HTTPS_PORT}:443"
     environment:
       SITE_ADDRESS: ${SITE_ADDRESS}
     volumes:
@@ -15,6 +17,7 @@ services:
 
   php:
     build: ./docker
+    restart: unless-stopped
     # Fara port expus: doar Caddy vorbeste cu PHP-FPM, in reteaua interna
     volumes:
       # Codul e montat, nu copiat: editarea locala se vede imediat in container
@@ -26,9 +29,8 @@ services:
 
   db:
     image: mysql:8.4
-    ports:
-      # Expus pe host ca sa se poata folosi un client GUI fara tunel SSH
-      - "3306:3306"
+    restart: unless-stopped
+    # Fara port expus: baza de date se vede doar din reteaua containerelor
     environment:
       # Fara locale, clientul mysql din imagine porneste pe latin1 si
       # strica encoding-ul diacriticelor la incarcarea datelor
@@ -45,14 +47,3 @@ services:
       interval: 5s
       timeout: 5s
       retries: 30
-
-  phpmyadmin:
-    image: phpmyadmin:5
-    ports:
-      - "8081:80"
-    environment:
-      PMA_HOST: db
-      UPLOAD_LIMIT: 64M
-    depends_on:
-      db:
-        condition: service_healthy

@@ -1,0 +1,18 @@
+# Ce pornim doar pe masina de dezvoltare. Serverul public incarca numai
+# compose.yaml, prin COMPOSE_FILE din .env
+services:
+  db:
+    ports:
+      # Expus pe host ca sa se poata folosi un client GUI fara tunel SSH
+      - "3306:3306"
+
+  phpmyadmin:
+    image: phpmyadmin:5
+    ports:
+      - "8081:80"
+    environment:
+      PMA_HOST: db
+      UPLOAD_LIMIT: 64M
+    depends_on:
+      db:
+        condition: service_healthy
