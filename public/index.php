@@ -53,6 +53,8 @@ switch ($route) {
         }
 
         if (($segments[2] ?? '') === 'pdf') {
+            requireLogin();
+
             sendDownload(
                 articlePdf($article),
                 $article['slug'] . '.pdf',
