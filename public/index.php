@@ -202,14 +202,18 @@ switch ($route) {
         }
 
         if ($action === '') {
+            // admin/articole
             adminList();
         } elseif ($action === 'nou') {
+            // admin/articole/nou
             $post ? adminSave(null) : adminForm(null);
         } elseif (!ctype_digit($action)) {
             notFound();
         } elseif (($segments[3] ?? '') === '') {
+            // admin/articole/{id}
             $post ? adminSave((int) $action) : adminForm((int) $action);
         } elseif ($segments[3] === 'stergere' && $post) {
+            // admin/articole/{id}/stergere
             adminDelete((int) $action);
         } else {
             notFound();
